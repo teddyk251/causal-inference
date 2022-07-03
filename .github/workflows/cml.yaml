@@ -1,0 +1,33 @@
+name: Report-Metrics
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: iterative/setup-cml@v1
+      - name: Metrics
+
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |    
+          if [ -e notebooks/reports/report.txt ] 
+          then
+            cat notebooks/reports/report.txt > report.md
+          fi
+
+          if [ -e notebooks/reports/correlation.png ]
+          then
+            echo "# Feature Correlation " >> report.md
+            cml publish notebooks/reports/correlation.png --md >> report.md
+          fi
+
+          if [ -e notebooks/reports/causal_graph.png ]
+          then
+            echo "# Causal Graph" >> report.md
+            cml publish notebooks/reports/causal_graph.png --md >> report.md
+          fi
+          
+          
+          cml send-comment report.md
