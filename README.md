@@ -1,4 +1,4 @@
-# casual-graph
+# Causal Inference
 **Table of Contents**
 
   - [Overview](#overview)
